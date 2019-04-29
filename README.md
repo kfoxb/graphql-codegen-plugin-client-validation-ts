@@ -1,0 +1,1 @@
+# graphql-codegen-plugin-client-validation-ts
