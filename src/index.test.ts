@@ -1,20 +1,21 @@
 import gql from 'graphql-tag';
 import { DocumentNode } from 'graphql';
-import { createSchema, plugin } from '../src'
-
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { createSchema, plugin } from '.';
 
 const tmpDir = path.resolve(__dirname, '../tmp/');
 
-describe('plugin', () => {
-  beforeAll(() => {
+describe('plugin', (): void => {
+  beforeAll((): void => {
     try {
       fs.mkdirSync(tmpDir);
+      // eslint-disable-next-line no-empty
     } catch (e) {}
   });
-  describe('createSchema', () => {
-    it('creates a schema with a basic query', () => {
+
+  describe('createSchema', (): void => {
+    it('creates a schema with a basic query', (): void => {
       const input: DocumentNode = gql`
         query getBlog @validate(not: { type: "null" }) {
           blog @validate(not: { type: "null" }) {
@@ -45,7 +46,7 @@ describe('plugin', () => {
     });
   });
 
-  it('creates a validation function for a basic query', () => {
+  it('creates a validation function for a basic query', (): void => {
     const input: DocumentNode = gql`
       query getBlog @validate(not: { type: "null" }) {
         blog @validate(not: { type: "null" }) {
@@ -59,7 +60,8 @@ describe('plugin', () => {
       },
     };
     const generatedCode = plugin(null, [{ filePath: '', content: input }]);
-    fs.writeFileSync(`${tmpDir  }/generated.ts`, generatedCode);
+    fs.writeFileSync(`${tmpDir}/generated.ts`, generatedCode);
+    // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
     const { validateGetBlog } = require('../tmp/generated.ts');
     const [actual] = validateGetBlog(validResult);
     expect(!!actual).toEqual(true);
