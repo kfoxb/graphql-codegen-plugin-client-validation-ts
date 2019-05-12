@@ -31,7 +31,8 @@
     "commit": "git-cz",
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
-    "travis-deploy-once": "travis-deploy-once"
+    "travis-deploy-once": "travis-deploy-once",
+    "postinstall": "rimraf node_modules/graphql/**/index.js"
   },
   "config": {
     "commitizen": {
@@ -64,7 +65,9 @@
     "collectCoverageFrom": [
       "src/*.{js,ts}"
     ],
-    "watchPathIgnorePatterns": ["tmp"]
+    "watchPathIgnorePatterns": [
+      "tmp"
+    ]
   },
   "commitlint": {
     "extends": [
