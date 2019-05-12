@@ -32,7 +32,7 @@
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "travis-deploy-once": "travis-deploy-once",
-    "postinstall": "rimraf node_modules/graphql/**/index.js"
+    "postinstall": "rimraf node_modules/graphql/**/index.mjs"
   },
   "config": {
     "commitizen": {

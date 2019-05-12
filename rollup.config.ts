@@ -6,17 +6,24 @@ import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 import pkg from './package.json';
 
+const commonOptions = {
+  sourceMaps: true,
+  globals: {
+    graphql: 'graphql',
+  },
+};
+
 // eslint-disable-next-line import/no-default-export
 export default {
   input: 'src/index.ts',
   output: [
     {
-      file: pkg.main, name: 'index', format: 'umd', sourcemap: true,
+      file: pkg.main, name: 'index', format: 'umd', ...commonOptions,
     },
-    { file: pkg.module, format: 'es', sourcemap: true },
+    { file: pkg.module, format: 'es', ...commonOptions },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [],
+  external: ['graphql'],
   watch: {
     include: 'src/**',
   },
@@ -31,7 +38,6 @@ export default {
     // which external modules to include in the bundle
     // https://github.com/rollup/rollup-plugin-node-resolve#usage
     resolve(),
-
     // Resolve source maps to the original source
     sourceMaps(),
   ],
