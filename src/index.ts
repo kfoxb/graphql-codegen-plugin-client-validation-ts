@@ -120,7 +120,7 @@ export const createSchema = (
   return jsonSchema;
 };
 
-export const plugin = (schema: GraphQLSchema, documents: Document[]): string => {
+export const plugin = (schema: any /* GraphQLSchema */, documents: Document[]): string => {
   const ast = concatAST(
     documents.reduce<DocumentNode[]>((prev, v): DocumentNode[] => [...prev, v.content], []),
   );
@@ -136,12 +136,13 @@ export const plugin = (schema: GraphQLSchema, documents: Document[]): string => 
       const jsonSchema = createSchema(node, allFragments);
       const name = node.name.value;
       const validator = `${name}Validator`;
-      const capitalName = `${name[0].toUpperCase()}${name.slice(1)}`;
       return `
         const ${validator} = ajv.compile(${JSON.stringify(jsonSchema, null, 2)});
-        export function validate${capitalName} (data: any) {
-          const valid = ${validator}(data);
-          return [valid, ${validator}.errors]
+        validator.${name} = {
+          validate: (data: any) => {
+            const valid = ${validator}(data);
+            return [valid, ${validator}.errors]
+          }
         }
       `;
     },
@@ -150,7 +151,7 @@ export const plugin = (schema: GraphQLSchema, documents: Document[]): string => 
   const globals = `
     import * as Ajv from 'ajv';
     const ajv = new Ajv();
-
+    export const validator: any = {};
   `;
 
   const { definitions } = visit(ast, visitor);

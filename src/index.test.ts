@@ -48,7 +48,7 @@ describe('plugin', (): void => {
 
   it('creates a validation function for a basic query', (): void => {
     const input: DocumentNode = gql`
-      query getBlog @validate(not: { type: "null" }) {
+      query items @validate(not: { type: "null" }) {
         blog @validate(not: { type: "null" }) {
           title @validate(maxLength: 20),
         }
@@ -62,8 +62,8 @@ describe('plugin', (): void => {
     const generatedCode = plugin(null, [{ filePath: '', content: input }]);
     fs.writeFileSync(`${tmpDir}/generated.ts`, generatedCode);
     // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
-    const { validateGetBlog } = require('../tmp/generated.ts');
-    const [actual] = validateGetBlog(validResult);
+    const { validator } = require('../tmp/generated.ts');
+    const [actual] = validator.items.validate(validResult);
     expect(!!actual).toEqual(true);
   });
 });
